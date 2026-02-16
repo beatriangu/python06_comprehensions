@@ -1,213 +1,231 @@
-🧭 MAP.md — Python Module 06 · The Codex 🧪
-Mastering Python Imports & Packages
-
-
-Este documento es mi mapa de aprendizaje y diseño.
-No describe ejercicios sueltos: explica cómo se construye una arquitectura de imports sana en Python.
-
-Sirve para comprensión, defensa y evolución del código.
-
+🧭 MAP.md — Python Module 06 · The Codex
+Arquitectura de Imports & Diseño de Packages
 🌱 IDEA CENTRAL DEL MÓDULO
 
 Pasar de:
 
-❌ “importo archivos y rezo”
+❌ “importo cosas y si funciona, perfecto”
 a
-✅ “defino interfaces claras y controlo qué expone cada parte del sistema”
+✅ “controlo qué expone mi sistema y cómo se conecta cada parte”
 
-Los imports no son sintaxis: son arquitectura.
+Los imports no son sintaxis.
+Son arquitectura invisible.
 
-🧠 OBJETIVO REAL
+🧠 VISIÓN GLOBAL DEL RECORRIDO
 
-Dominar el sistema de imports de Python construyendo un package real y entendiendo:
+El módulo progresa desde:
 
-qué es público y qué es interno
+ex0 → exponer una API pública
+ex1 → decidir cómo importar
+ex2 → organizar jerarquías reales
+ex3 → resolver dependencias circulares
 
-cómo __init__.py define una API
+No es un módulo de “imports”.
+Es un módulo de control de dependencias y diseño modular.
 
-cómo escalar un proyecto sin romper dependencias
+🟢 ex0 — Diseñar una API pública (The Sacred Scroll)
+🎯 FOCO
 
-cómo evitar circular imports de forma consciente
+Entender que un package no es una carpeta:
+es una interfaz pública controlada.
 
-El foco del módulo no es la lógica, sino la organización del código.
+📐 Arquitectura mental
+alchemy/
+ ├── __init__.py  ← API pública
+ ├── elements.py  ← implementación interna
 
-🧩 CONCEPTOS CLAVE TRABAJADOS
+🧠 CONCEPTOS CLAVE
 
 Módulo vs package
 
-__init__.py como interfaz pública
+__init__.py como frontera
 
-Acceso a nivel módulo vs nivel package
+Qué se expone y qué no
 
-Estilos de import:
-
-módulo completo
-
-funciones específicas
-
-alias
-
-imports múltiples
-
-Imports absolutos vs relativos
-
-Subpackages y jerarquía
-
-Dependencias circulares y late imports
-
-🗂️ ESTRUCTURA DEL REPOSITORIO (ARQUITECTURA)
-python06_import_codex/
-├── alchemy/
-│   ├── __init__.py          ← API pública
-│   ├── elements.py          ← implementación interna
-│   └── transmutation/
-│       ├── __init__.py
-│       ├── basic.py
-│       └── advanced.py
-├── ft_sacred_scroll.py
-├── ft_import_transmutation.py
-├── ft_pathway_debate.py
-├── ft_circular_curse.py
-├── README.md
-└── MAP.md
-
-
-🧠 Clave mental:
-Los scripts usan el package.
-El package controla qué se expone.
-
-🟢 Part I — The Sacred Scroll
-🎯 FOCO
-
-Definir la API pública de un package.
-
-🧠 APRENDO
-
-Un módulo puede contener muchas funciones
-
-Un package no tiene por qué exponerlas todas
-
-__init__.py decide qué existe a nivel package
+Namespace controlado
 
 🧩 CLAVE MENTAL
 
-👉 Lo que no está en __init__.py no existe para el exterior.
+👉 Todo existe dentro del módulo.
+👉 Solo existe fuera lo que tú decides exportar.
 
-alchemy.elements.create_earth()   ✔
-alchemy.create_earth()            ✖ AttributeError
+# alchemy/__init__.py
+from .elements import create_earth
 
 
-El error se gestiona sin crash.
+Si no lo exportas → no forma parte del contrato.
 
-🟢 Part II — Import Transmutation
+Esto es diseño de API.
+
+🔗 Prepara para → entender acoplamiento real
+
+🟢 ex1 — Estilos de import (Import Transmutation)
 🎯 FOCO
 
-Comprender los estilos de import y sus consecuencias.
+Comprender que importar también es una decisión de diseño.
 
-🧠 APRENDO
+📐 Formas de importar
+import alchemy
+from alchemy import create_earth
+import alchemy as alc
+from alchemy import create_earth as ce
 
-Importar módulos completos vs funciones
+🧠 CONCEPTOS CLAVE
 
-Uso de alias
+Namespace
 
-Imports múltiples
+Legibilidad
 
-Impacto en:
+Acoplamiento
 
-legibilidad
-
-namespace
-
-acoplamiento
+Claridad vs comodidad
 
 🧩 CLAVE MENTAL
 
-👉 Importar también es una decisión de diseño.
+👉 Cuanto más específico el import,
+👉 más estrecho el acoplamiento.
 
-🟢 Part III — The Great Pathway Debate
+Importar un módulo completo:
+
+Más explícito
+
+Más claro
+
+Importar funciones directas:
+
+Más corto
+
+Más frágil si cambia la API
+
+Esto ya es arquitectura.
+
+🔗 Depende de → ex0
+🔗 Prepara para → diseño escalable
+
+🟢 ex2 — Absoluto vs Relativo (The Great Pathway Debate)
 🎯 FOCO
 
-Comparar imports absolutos vs relativos.
+Organizar jerarquías reales con subpackages.
 
-🧠 APRENDO
+📐 Arquitectura mental
+alchemy/
+ ├── __init__.py
+ ├── elements.py
+ └── transmutation/
+      ├── __init__.py
+      ├── basic.py
+      └── advanced.py
 
-Absolutos: más explícitos, más claros
+🧠 CONCEPTOS CLAVE
 
-Relativos: más concisos, más frágiles si crece el proyecto
+Imports absolutos:
 
-Subpackages bien definidos
+from alchemy.transmutation.basic import ...
 
-Exposición controlada vía __init__.py
+
+Imports relativos:
+
+from .basic import ...
 
 🧩 CLAVE MENTAL
 
-👉 Ambos funcionan.
-👉 La elección depende de escala y claridad, no de gustos.
+👉 Absoluto = claridad global
+👉 Relativo = comodidad local
 
-🟢 Part IV — Breaking the Circular Curse
+Cuando el proyecto crece:
+los absolutos escalan mejor.
+
+Aquí empiezas a pensar como diseñador de paquetes.
+
+🔗 Prepara para → evitar dependencias circulares
+
+🟢 ex3 — Dependencias circulares (Breaking the Circular Curse)
 🎯 FOCO
 
-Evitar dependencias circulares sin hacks.
+Entender cómo Python carga módulos.
 
-🧠 APRENDO
+🧠 Qué ocurre realmente
 
-Qué es una dependencia circular
+Cuando haces:
 
-Por qué Python falla al cargar módulos cíclicos
-
-Uso de late imports para romper el ciclo
-
-Mantener responsabilidades separadas
-
-🧩 CLAVE FINAL
-
-👉 El diseño evita el problema.
-👉 El late import resuelve cuando el diseño lo permite.
-
-El sistema:
-
-detecta el problema
-
-no crashea
-
-sigue funcionando
-
-🧠 VISIÓN GLOBAL DEL MÓDULO
-archivo → módulo → package → subpackage → sistema estable
+import module_a
 
 
-No son scripts sueltos.
-Es una arquitectura de imports consciente.
+Python:
 
-📌 CONCEPTOS CLAVE PARA DEFENSA
+Crea el objeto módulo
 
-Un módulo se carga entero al importarse
+Lo añade a sys.modules
 
-Un package expone solo lo definido en __init__.py
+Ejecuta su código
 
-__init__.py define la API pública
+Si module_a importa module_b
+y module_b importa module_a
+→ uno se ejecuta incompleto
+→ error.
 
-Los imports forman parte de la arquitectura
+🧩 CLAVE MENTAL
 
-Las dependencias circulares se evitan con diseño, no con magia
+👉 El problema no es el import.
+👉 Es el diseño de dependencias.
 
-✅ CHECKLIST FINAL
+Soluciones:
 
- Scripts ejecutables desde la raíz
+Reorganizar responsabilidades
 
- Sin errores de import
+Extraer lógica común
 
- APIs públicas explícitas
+Usar late imports si el diseño lo permite
 
- flake8 limpio (# noqa: F401 usado de forma intencional)
-
- Código claro, simple y defendible
-
-▶️ TESTS MANUALES
-python3 ft_sacred_scroll.py
-python3 ft_import_transmutation.py
-python3 ft_pathway_debate.py
-python3 ft_circular_curse.py
+def function():
+    from module_b import something
 
 
-Este módulo demuestra cómo diseñar paquetes Python con interfaces claras, imports controlados y dependencias seguras, entendiendo que los imports forman parte de la arquitectura del sistema y no son un detalle de sintaxis.
+Late import = herramienta de emergencia, no parche permanente.
+
+🔁 EVOLUCIÓN DEL DISEÑO
+Nivel	Concepto	Ejercicio
+Base	Exponer API	ex0
+Intermedio	Diseñar imports	ex1
+Estructural	Organizar jerarquía	ex2
+Arquitectónico	Resolver dependencias	ex3
+🧠 MAPA GLOBAL
+archivo → módulo → package → subpackage → sistema modular estable
+
+🧩 DECISIONES DE DISEÑO (CON INTENCIÓN)
+
+__init__.py define contrato
+
+Scripts usan el package, no archivos internos
+
+Imports absolutos para claridad global
+
+Evitar dependencias bidireccionales
+
+Pensar en dependencias antes de escribir código
+
+🎯 IDEA FINAL DEL MÓDULO
+
+El módulo 6 no trata de imports.
+
+Trata de:
+
+Diseño modular
+
+Control de dependencias
+
+Definición de API
+
+Escalabilidad futura
+
+Un sistema bien importado es:
+
+predecible
+
+estable
+
+mantenible
+
+🧠 FRASE RESUMEN 
+
+El módulo progresa desde comprender qué es un módulo hasta diseñar una arquitectura de paquetes con APIs explícitas y dependencias controladas, entendiendo que los imports forman parte del diseño estructural del sistema y no son solo sintaxis.
