@@ -21,7 +21,7 @@ Move from:
 to
 ✅ “I define clear module boundaries and control what my system exposes”
 
-Imports are not a detail.
+Imports are not an implementation detail.
 They are architecture.
 
 🎯 Learning Objectives
@@ -32,9 +32,9 @@ Distinguish clearly between a module and a package
 
 Use __init__.py as a public API boundary
 
-Explicitly control what a package exposes
+Control what a package exposes
 
-Evaluate different import styles and their trade-offs
+Evaluate import styles and their trade-offs
 
 Compare absolute and relative imports in real structures
 
@@ -46,7 +46,7 @@ Defend every import decision during evaluation
 
 🧠 What This Module Really Teaches
 
-This module develops understanding of:
+This module deepens understanding of:
 
 How Python loads modules
 
@@ -58,7 +58,7 @@ Why circular dependencies occur
 
 How to design around them instead of patching them
 
-It is about thinking in terms of:
+It shifts perspective from:
 
 file → module → package → system
 
@@ -75,8 +75,7 @@ Use __init__.py as an explicit contract
 
 Demonstrate controlled namespace behavior
 
-Key concept:
-
+Key idea:
 What is not exported does not exist publicly.
 
 Part II — Import Transmutation
@@ -89,40 +88,35 @@ from module import name
 
 Aliasing strategies
 
-Namespace clarity vs convenience
-
-Key concept:
-
-Import style affects readability and coupling.
+Key idea:
+Import style affects readability, clarity, and coupling.
 
 Part III — The Great Pathway Debate
 
 Focus: Absolute vs relative imports
 
-Absolute imports for clarity and scalability
+Absolute imports for scalability
 
 Relative imports for local cohesion
 
 Subpackage exposure strategies
 
-Key concept:
-
-The right choice depends on scale and architectural intent.
+Key idea:
+The right choice depends on architectural intent.
 
 Part IV — Breaking the Circular Curse
 
-Focus: Dependency management
+Focus: Dependency direction
 
-Understand how Python executes imports
+Understand import execution order
 
-Detect circular dependency scenarios
+Detect circular dependency patterns
 
 Refactor responsibilities
 
 Use late imports when appropriate
 
-Key concept:
-
+Key idea:
 Circular imports are a design problem, not an import problem.
 
 🧩 Architectural Principles Applied
@@ -139,9 +133,7 @@ One responsibility per module
 
 No hidden magic
 
-This module reinforces:
-
-Clean imports lead to predictable systems.
+Clean imports produce predictable systems.
 
 🛠️ Technical Constraints
 
@@ -155,21 +147,21 @@ No sys.path manipulation
 
 No dynamic import hacks
 
-# noqa: F401 used intentionally to define public APIs
+# noqa: F401 used intentionally for public APIs
 
 📌 Why This Module Matters
 
 In real-world projects:
 
-Poor import structure leads to fragile systems
+Poor import structure creates fragile systems
 
 Circular dependencies block scalability
 
-Uncontrolled exposure creates unstable APIs
+Uncontrolled exposure destabilizes APIs
 
-Refactoring becomes dangerous
+Refactoring becomes risky
 
-Understanding imports deeply allows you to:
+Mastering imports allows you to:
 
 Design scalable packages
 

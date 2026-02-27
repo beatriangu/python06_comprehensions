@@ -1,113 +1,102 @@
 🧭 MAP.md — Python Module 06 · The Codex
-Arquitectura de Imports & Diseño de Packages
-🌱 IDEA CENTRAL DEL MÓDULO
+Import Architecture & Package Design
+🌱 Core Idea
 
-Pasar de:
+Move from:
 
-❌ “importo cosas y si funciona, perfecto”
-a
-✅ “controlo qué expone mi sistema y cómo se conecta cada parte”
+❌ “I import things and hope it works”
+to
+✅ “I control what my system exposes and how each part connects”
 
-Los imports no son sintaxis.
-Son arquitectura invisible.
+Imports are not syntax.
+They are invisible architecture.
 
-🧠 VISIÓN GLOBAL DEL RECORRIDO
+🧠 Learning Progression
 
-El módulo progresa desde:
+The module evolves through increasing structural depth:
 
-ex0 → exponer una API pública
-ex1 → decidir cómo importar
-ex2 → organizar jerarquías reales
-ex3 → resolver dependencias circulares
+ex0 → define a public API
+ex1 → design import style
+ex2 → organize real hierarchies
+ex3 → resolve circular dependencies
 
-No es un módulo de “imports”.
-Es un módulo de control de dependencias y diseño modular.
+This is not a module about imports.
 
-🟢 ex0 — Diseñar una API pública (The Sacred Scroll)
-🎯 FOCO
+It is about dependency control and modular design.
 
-Entender que un package no es una carpeta:
-es una interfaz pública controlada.
+🟢 ex0 — Designing a Public API
+The Sacred Scroll
+🎯 Focus
 
-📐 Arquitectura mental
+Understand that a package is not just a folder —
+it is a controlled public interface.
+
+📐 Mental Architecture
 alchemy/
- ├── __init__.py  ← API pública
- ├── elements.py  ← implementación interna
+ ├── __init__.py     ← Public API boundary
+ ├── elements.py     ← Internal implementation
+🧠 Core Concepts
 
-🧠 CONCEPTOS CLAVE
+Module vs package
 
-Módulo vs package
+__init__.py as boundary
 
-__init__.py como frontera
+Controlled namespace exposure
 
-Qué se expone y qué no
+Public vs internal responsibility
 
-Namespace controlado
+🧩 Mental Model
 
-🧩 CLAVE MENTAL
-
-👉 Todo existe dentro del módulo.
-👉 Solo existe fuera lo que tú decides exportar.
+Everything exists inside the package.
+Only what you export exists outside.
 
 # alchemy/__init__.py
 from .elements import create_earth
 
+If it is not exported →
+it is not part of the contract.
 
-Si no lo exportas → no forma parte del contrato.
+This is API design.
 
-Esto es diseño de API.
+🟢 ex1 — Import Styles
+Import Transmutation
+🎯 Focus
 
-🔗 Prepara para → entender acoplamiento real
+Importing is also a design decision.
 
-🟢 ex1 — Estilos de import (Import Transmutation)
-🎯 FOCO
-
-Comprender que importar también es una decisión de diseño.
-
-📐 Formas de importar
+📐 Import Variations
 import alchemy
 from alchemy import create_earth
 import alchemy as alc
 from alchemy import create_earth as ce
+🧠 Core Concepts
 
-🧠 CONCEPTOS CLAVE
+Namespace clarity
 
-Namespace
+Readability
 
-Legibilidad
+Coupling
 
-Acoplamiento
+Explicitness vs convenience
 
-Claridad vs comodidad
+🧩 Mental Model
 
-🧩 CLAVE MENTAL
+The more specific the import,
+the tighter the coupling.
 
-👉 Cuanto más específico el import,
-👉 más estrecho el acoplamiento.
+Style	Effect
+import module	More explicit, clearer origin
+from module import name	Shorter, more fragile if API changes
 
-Importar un módulo completo:
+Import style shapes architectural stability.
 
-Más explícito
+🟢 ex2 — Absolute vs Relative Imports
+The Great Pathway Debate
+🎯 Focus
 
-Más claro
+Design scalable hierarchies with subpackages.
 
-Importar funciones directas:
-
-Más corto
-
-Más frágil si cambia la API
-
-Esto ya es arquitectura.
-
-🔗 Depende de → ex0
-🔗 Prepara para → diseño escalable
-
-🟢 ex2 — Absoluto vs Relativo (The Great Pathway Debate)
-🎯 FOCO
-
-Organizar jerarquías reales con subpackages.
-
-📐 Arquitectura mental
+📐 Mental Architecture
 alchemy/
  ├── __init__.py
  ├── elements.py
@@ -115,117 +104,123 @@ alchemy/
       ├── __init__.py
       ├── basic.py
       └── advanced.py
+🧠 Core Concepts
 
-🧠 CONCEPTOS CLAVE
-
-Imports absolutos:
+Absolute imports:
 
 from alchemy.transmutation.basic import ...
 
-
-Imports relativos:
+Relative imports:
 
 from .basic import ...
+🧩 Mental Model
 
-🧩 CLAVE MENTAL
+Absolute → global clarity
+Relative → local convenience
 
-👉 Absoluto = claridad global
-👉 Relativo = comodidad local
+As systems scale,
+absolute imports improve readability and refactor safety.
 
-Cuando el proyecto crece:
-los absolutos escalan mejor.
+This is package design thinking.
 
-Aquí empiezas a pensar como diseñador de paquetes.
+🟢 ex3 — Circular Dependencies
+Breaking the Circular Curse
+🎯 Focus
 
-🔗 Prepara para → evitar dependencias circulares
+Understand how Python loads modules.
 
-🟢 ex3 — Dependencias circulares (Breaking the Circular Curse)
-🎯 FOCO
+🧠 What Really Happens
 
-Entender cómo Python carga módulos.
-
-🧠 Qué ocurre realmente
-
-Cuando haces:
+When you write:
 
 import module_a
 
-
 Python:
 
-Crea el objeto módulo
+Creates the module object
 
-Lo añade a sys.modules
+Adds it to sys.modules
 
-Ejecuta su código
+Executes its code
 
-Si module_a importa module_b
-y module_b importa module_a
-→ uno se ejecuta incompleto
-→ error.
+If:
 
-🧩 CLAVE MENTAL
+module_a → imports module_b
+module_b → imports module_a
 
-👉 El problema no es el import.
-👉 Es el diseño de dependencias.
+One module executes partially →
+incomplete state → error.
 
-Soluciones:
+🧩 Mental Model
 
-Reorganizar responsabilidades
+The issue is not the import statement.
 
-Extraer lógica común
+It is dependency design.
 
-Usar late imports si el diseño lo permite
+Solutions:
+
+Reorganize responsibilities
+
+Extract shared logic
+
+Use late imports (only if architecturally justified)
 
 def function():
     from module_b import something
 
+Late imports are an emergency tool,
+not a permanent design solution.
 
-Late import = herramienta de emergencia, no parche permanente.
+🔁 Structural Evolution
+Level	Concept	Exercise
+Base	Public API exposure	ex0
+Intermediate	Import style design	ex1
+Structural	Hierarchy organization	ex2
+Architectural	Dependency resolution	ex3
+🗺 Global Mental Map
+file
+   ↓
+module
+   ↓
+package
+   ↓
+subpackage
+   ↓
+stable modular system
+🧩 Design Decisions with Intent
 
-🔁 EVOLUCIÓN DEL DISEÑO
-Nivel	Concepto	Ejercicio
-Base	Exponer API	ex0
-Intermedio	Diseñar imports	ex1
-Estructural	Organizar jerarquía	ex2
-Arquitectónico	Resolver dependencias	ex3
-🧠 MAPA GLOBAL
-archivo → módulo → package → subpackage → sistema modular estable
+__init__.py defines the contract
 
-🧩 DECISIONES DE DISEÑO (CON INTENCIÓN)
+Scripts import packages, not internal files
 
-__init__.py define contrato
+Prefer absolute imports for global clarity
 
-Scripts usan el package, no archivos internos
+Avoid bidirectional dependencies
 
-Imports absolutos para claridad global
+Design dependency direction before writing code
 
-Evitar dependencias bidireccionales
+🎯 Final Insight
 
-Pensar en dependencias antes de escribir código
+Module 6 is not about imports.
 
-🎯 IDEA FINAL DEL MÓDULO
+It is about:
 
-El módulo 6 no trata de imports.
+Modular system design
 
-Trata de:
+Dependency direction
 
-Diseño modular
+Explicit API contracts
 
-Control de dependencias
+Future scalability
 
-Definición de API
+A well-imported system is:
 
-Escalabilidad futura
+predictable
 
-Un sistema bien importado es:
+stable
 
-predecible
+maintainable
 
-estable
+🧠 Summary Statement
 
-mantenible
-
-🧠 FRASE RESUMEN 
-
-El módulo progresa desde comprender qué es un módulo hasta diseñar una arquitectura de paquetes con APIs explícitas y dependencias controladas, entendiendo que los imports forman parte del diseño estructural del sistema y no son solo sintaxis.
+This module progresses from understanding what a module is to designing full package architectures with explicit APIs and controlled dependencies — recognizing that imports are structural design decisions, not just syntax.
